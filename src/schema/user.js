@@ -33,7 +33,6 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre('save', function saveUser(next) {
     const user = this;
-    user.password = hashedPassword;
     user.avatar = `https://robohash.org/${user.username}`;
   next();
 });

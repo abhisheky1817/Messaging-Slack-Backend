@@ -1,4 +1,4 @@
-import { User } from '../models/user.js';
+import { User } from '../schema/user.js';
 
 export const getUserByEmail = async (email) => {
     const user = await User.findOne({ email });
@@ -15,7 +15,10 @@ export const createUser = async (user) => {
     return newUser;
 };
 
-export const getUsers = async () => {};
+export const getUsers = async () => {
+    const users = await User.find();
+    return users;
+};
 
 export const getUserById = async (id) => {
     const user = await User.findById(id);
@@ -29,4 +32,5 @@ export const deleteUser = async (id) => {
 
 export const updateUser = async (id, user) => {
     const response = await User.findByIdAndUpdate(id, user, { new: true });
+    return response;
 };
