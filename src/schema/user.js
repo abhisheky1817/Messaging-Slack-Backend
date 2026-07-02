@@ -32,13 +32,12 @@ const userSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-userSchema.pre('save', function saveUser(next) {
+userSchema.pre('save', function saveUser() {
     const user = this;
-     const SALT = bcrypt.genSaltSync(9);
+    const SALT = bcrypt.genSaltSync(9);
     const hashedPassword = bcrypt.hashSync(user.password, SALT);
     user.password = hashedPassword;
     user.avatar = `https://robohash.org/${user.username}`;
-  next();
 });
 
 
