@@ -15,7 +15,6 @@ app.get('/ping', (req, res) => {
 
 app.use('/api', apiRoutes);
 
-
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
   connectDB();
