@@ -10,7 +10,7 @@ export const validate = (schema) => {
     } catch (error) {
       let explanation = [];
       let errorMessage = '';
-      error.errors.forEach((key) => {
+      error.issues.forEach((key) => {
         explanation.push(key.path[0] + ' ' + key.message);
         errorMessage += ' : ' + key.path[0] + ' ' + key.message;
       });
