@@ -4,7 +4,8 @@ import { isAuthenticated } from '../../middlewares/authMiddleware.js';
 
 import {
   createWorkspaceController,
-    getWorkspacesUserIsMemberOfController
+    getWorkspacesUserIsMemberOfController,
+    deleteWorkspaceController
 } from '../../controllers/workspaceController.js';
 
 import {
@@ -23,5 +24,7 @@ router.post(
 );
 
 router.get('/', isAuthenticated, getWorkspacesUserIsMemberOfController);
+
+router.delete('/:workspaceId', isAuthenticated, deleteWorkspaceController);
 
 export default router;
