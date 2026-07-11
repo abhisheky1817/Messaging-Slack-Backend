@@ -132,9 +132,38 @@ export const getWorkspaceService = async (workspaceId, userId) => {
     }
 
     return workspace;
-    
+
   } catch (error) {
     console.log('Get workspace service error', error);
+    throw error;
+  }
+};
+
+export const getWorkspaceByJoinCodeService = async (joinCode, userId) => {
+  try {
+    const workspace = await workspaceRepository.getWorkspaceByJoinCode(joinCode);
+
+    if (!workspace) {
+      throw new ClientError({
+        explanation: 'Invalid data sent from the client',
+        message: 'Workspace not found',
+        statusCode: StatusCodes.NOT_FOUND
+      });
+    }
+
+    const isMember = isUserMemberOfWorkspace(workspace, userId);
+
+    if (!isMember) {
+      throw new ClientError({
+        explanation: 'User is not a member of the workspace',
+        message: 'User is not a member of the workspace',
+        statusCode: StatusCodes.UNAUTHORIZED
+      });
+    }
+    return workspace;
+    
+  } catch (error) {
+    console.log('Get workspace by join code service error', error);
     throw error;
   }
 };
