@@ -17,6 +17,13 @@ const isUserAdminOfWorkspace = (workspace, userId) => {
   return response;
 };
 
+export const isUserMemberOfWorkspace = (workspace, userId) => {
+  return workspace.members.find((member) => {
+    console.log('member id ', member.memberId.toString());
+    return member.memberId._id.toString() === userId;
+  });
+};
+
 export const createWorkspaceService = async (workspaceData) => {
   try {
     const joinCode = uuidv4().substring(0, 6).toUpperCase();
@@ -101,3 +108,34 @@ export const deleteWorkspaceService = async (workspaceId, userId) => {
     throw error;
   }
 };
+
+export const getWorkspaceService = async (workspaceId, userId) => {
+  try {
+    const workspace = await workspaceRepository.getWorkspaceDetailsById(workspaceId);
+
+    if (!workspace) {
+      throw new ClientError({
+        explanation: 'Invalid data sent from the client',
+        message: 'Workspace not found',
+        statusCode: StatusCodes.NOT_FOUND
+      });
+    }
+
+    const isMember = isUserMemberOfWorkspace(workspace, userId);
+
+    if (!isMember) {
+      throw new ClientError({
+        explanation: 'User is not a member of the workspace',
+        message: 'User is not a member of the workspace',
+        statusCode: StatusCodes.UNAUTHORIZED
+      });
+    }
+
+    return workspace;
+    
+  } catch (error) {
+    console.log('Get workspace service error', error);
+    throw error;
+  }
+};
+
