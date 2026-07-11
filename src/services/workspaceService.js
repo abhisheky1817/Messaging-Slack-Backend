@@ -4,8 +4,18 @@ import { v4 as uuidv4 } from 'uuid';
 import workspaceRepository from '../repositories/workspaceRepository.js';
 import channelRepository from '../repositories/channelRepository.js';
 import ValidationError from '../utils/errors/validationError.js';
-import { isUserAdminOfWorkspace } from '../utils/common/workspaceUtils.js';
 import ClientError from '../utils/errors/clientError.js';
+
+const isUserAdminOfWorkspace = (workspace, userId) => {
+  console.log(workspace.members, userId);
+  const response = workspace.members.find(
+    (member) =>
+      (member.memberId.toString() === userId ||
+        member.memberId._id.toString() === userId) &&
+      member.role === 'admin'
+  );
+  return response;
+};
 
 export const createWorkspaceService = async (workspaceData) => {
   try {
