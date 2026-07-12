@@ -8,11 +8,13 @@ import {
     deleteWorkspaceController,
     getWorkspaceController,
     getWorkspaceByJoinCodeController,
-    updateWorkspaceController
+    updateWorkspaceController,
+    addMemberToWorkspaceController
 } from '../../controllers/workspaceController.js';
 
 import {
-  createWorkspaceSchema
+  createWorkspaceSchema,
+  addMemberToWorkspaceSchema
 } from '../../validators/workspaceSchema.js';
 
 import { validate } from '../../validators/zodValidator.js';
@@ -39,5 +41,8 @@ router.get(
 );
 
 router.put('/:workspaceId', isAuthenticated, updateWorkspaceController);
+
+router.put(
+  '/:workspaceId/members', isAuthenticated, validate(addMemberToWorkspaceSchema), addMemberToWorkspaceController );
 
 export default router;

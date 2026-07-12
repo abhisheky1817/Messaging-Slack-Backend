@@ -2,6 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import { v4 as uuidv4 } from 'uuid';
 
 import workspaceRepository from '../repositories/workspaceRepository.js';
+import userRepository from '../repositories/userRepository.js';
 import channelRepository from '../repositories/channelRepository.js';
 import ValidationError from '../utils/errors/validationError.js';
 import ClientError from '../utils/errors/clientError.js';
@@ -197,6 +198,60 @@ export const updateWorkspaceService = async (
     return updatedWorkspace;
   } catch (error) {
     console.log('update workspace service error', error);
+    throw error;
+  }
+};
+
+
+export const addMemberToWorkspaceService = async (
+  workspaceId,
+  memberId,
+  role,
+  userId
+) => {
+  try {
+    const workspace = await workspaceRepository.getById(workspaceId);
+    if (!workspace) {
+      throw new ClientError({
+        explanation: 'Invalid data sent from the client',
+        message: 'Workspace not found',
+        statusCode: StatusCodes.NOT_FOUND
+      });
+    }
+
+    const isAdmin = isUserAdminOfWorkspace(workspace, userId);
+    if (!isAdmin) {
+      throw new ClientError({
+        explanation: 'User is not an admin of the workspace',
+        message: 'User is not an admin of the workspace',
+        statusCode: StatusCodes.UNAUTHORIZED
+      });
+    }
+
+    const isValidUser = await userRepository.getById(memberId);
+    if (!isValidUser) {
+      throw new ClientError({
+        explanation: 'Invalid data sent from the client',
+        message: 'User not found',
+        statusCode: StatusCodes.NOT_FOUND
+      });
+    }
+    const isMember = isUserMemberOfWorkspace(workspace, memberId);
+    if (isMember) {
+      throw new ClientError({
+        explanation: 'User is already a member of the workspace',
+        message: 'User is already a member of the workspace',
+        statusCode: StatusCodes.UNAUTHORIZED
+      });
+    }
+    const response = await workspaceRepository.addMemberToWorkspace(
+      workspaceId,
+      memberId,
+      role
+    );
+    return response;
+  } catch (error) {
+    console.log('addMemberToWorkspaceService error', error);
     throw error;
   }
 };
