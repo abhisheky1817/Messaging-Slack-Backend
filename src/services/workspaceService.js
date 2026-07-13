@@ -6,6 +6,8 @@ import userRepository from '../repositories/userRepository.js';
 import channelRepository from '../repositories/channelRepository.js';
 import ValidationError from '../utils/errors/validationError.js';
 import ClientError from '../utils/errors/clientError.js';
+import { addEmailtoMailQueue } from '../queues/mailQueue.js';
+import { workspaceJoinMail } from '../utils/common/mailObject.js';
 
 const isUserAdminOfWorkspace = (workspace, userId) => {
   console.log(workspace.members, userId);
@@ -255,6 +257,10 @@ export const addMemberToWorkspaceService = async (
       memberId,
       role
     );
+    addEmailtoMailQueue({
+      ...workspaceJoinMail(workspace),
+      to: isValidUser.email
+    });
     return response;
   } catch (error) {
     console.log('addMemberToWorkspaceService error', error);
