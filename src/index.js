@@ -1,6 +1,7 @@
 import express from 'express';
 import { PORT } from './config/serverconfig.js';
 import { StatusCodes } from 'http-status-codes';
+import bullServerAdapter from './config/bullBoardConfig.js';
 import connectDB from './config/dbconfig.js';
 import apiRoutes from './routes/apiRoutes.js';
 import mailer from './config/mailConfig.js';
@@ -9,6 +10,8 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use('/ui', bullServerAdapter.getRouter());
 
 app.get('/ping', (req, res) => {
   return res.status(StatusCodes.OK).json({ message: 'pong working' });
