@@ -1,11 +1,15 @@
 import express from 'express';
+import { createServer } from 'http';
 import { PORT } from './config/serverConfig.js';
 import { StatusCodes } from 'http-status-codes';
 import bullServerAdapter from './config/bullBoardConfig.js';
 import connectDB from './config/dbconfig.js';
 import apiRoutes from './routes/apiRoutes.js';
+import { Server } from 'socket.io';
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -18,7 +22,16 @@ app.get('/ping', (req, res) => {
 
 app.use('/api', apiRoutes);
 
-app.listen(PORT, () => {
+io.on('connection', (socket) => {
+  console.log('A user connected', socket.id);
+
+  setTimeout(() => {
+    socket.emit('message', { message: 'Hello from server' });
+  }, 2000);
+
+});
+
+server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
   connectDB();
 });
