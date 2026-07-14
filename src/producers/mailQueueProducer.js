@@ -1,10 +1,11 @@
 import '../processors/mailProcessor.js';
-
 import mailQueue from '../queues/mailQueue.js';
+
 export const addEmailtoMailQueue = async (emailData) => {
   console.log('initiating email sending process');
+
   try {
-    await mailQueue.add(emailData);
+    await mailQueue.add('send-email', emailData);
     console.log('Email added to mail queue');
   } catch (error) {
     console.log('Add email to mail queue error', error);

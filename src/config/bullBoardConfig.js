@@ -1,16 +1,19 @@
 import { createBullBoard } from '@bull-board/api';
-import { BullAdapter } from '@bull-board/api/bullAdapter.js';
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ExpressAdapter } from '@bull-board/express';
 
 import mailQueue from '../queues/mailQueue.js';
 import testQueue from '../queues/testQueue.js';
 
-const bullServerAdapter = new ExpressAdapter();
-bullServerAdapter.setBasePath('/ui');
+const serverAdapter = new ExpressAdapter();
+serverAdapter.setBasePath('/ui');
 
 createBullBoard({
-  queues: [new BullAdapter(mailQueue), new BullAdapter(testQueue)],
-  serverAdapter: bullServerAdapter
+  queues: [
+    new BullMQAdapter(mailQueue),
+    new BullMQAdapter(testQueue),
+  ],
+  serverAdapter,
 });
 
-export default bullServerAdapter;
+export default serverAdapter;
