@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import jwt from 'jsonwebtoken';
 
-import { JWT_SECRET } from '../config/serverconfig.js';
+import { JWT_SECRET } from '../config/serverConfig.js';
 import userRepository from '../repositories/userRepository.js';
 import {
   customErrorResponse,
@@ -32,6 +32,13 @@ export const isAuthenticated = async (req, res, next) => {
     }
 
     const user = await userRepository.getById(response.id);
+     if (!user) {
+      return res.status(StatusCodes.FORBIDDEN).json(
+        customErrorResponse({
+          message: 'User not found for provided token'
+        })
+      );
+    }
     req.user = user.id;
     next();
   } catch (error) {

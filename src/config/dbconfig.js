@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { DEVELOPMENT_DB_URL, NODE_ENV, PRODUCTION_DB_URL } from './serverconfig.js';
+import { DEVELOPMENT_DB_URL, NODE_ENV, PRODUCTION_DB_URL } from './serverConfig.js';
 
 export default async function connectDB() {
   try {

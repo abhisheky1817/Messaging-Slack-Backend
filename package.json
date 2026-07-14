@@ -7,7 +7,9 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "format": "prettier . --write",
-    "start": "npm run lint:fix && npm run format && node src/index.js"
+    "prestart": "wsl sudo service redis-server start",
+   "start": "node src/index.js",
+   "dev": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "",
