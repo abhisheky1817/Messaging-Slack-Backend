@@ -5,6 +5,8 @@ import { StatusCodes } from 'http-status-codes';
 import bullServerAdapter from './config/bullBoardConfig.js';
 import connectDB from './config/dbconfig.js';
 import apiRoutes from './routes/apiRoutes.js';
+import ChannelSocketHandlers from './controllers/channelSocketController.js';
+import MessageSocketHandlers from './controllers/messageSocketController.js';
 import { Server } from 'socket.io';
 
 const app = express();
@@ -28,6 +30,9 @@ io.on('connection', (socket) => {
   // setTimeout(() => {
   //   socket.emit('message', { message: 'Hello from server' });
   // }, 2000);
+
+   MessageSocketHandlers(io, socket);
+  ChannelSocketHandlers(io, socket);
 
 });
 
