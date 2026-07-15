@@ -25,9 +25,9 @@ app.use('/api', apiRoutes);
 io.on('connection', (socket) => {
   console.log('A user connected', socket.id);
 
-  setTimeout(() => {
-    socket.emit('message', { message: 'Hello from server' });
-  }, 2000);
+  // setTimeout(() => {
+  //   socket.emit('message', { message: 'Hello from server' });
+  // }, 2000);
 
 });
 
